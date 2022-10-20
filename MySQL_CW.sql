@@ -1,5 +1,32 @@
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS copy;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS loan;
+
 CREATE TABLE book (
-     isbn CHAR(17) NOT NULL, 
-     title VARCHAR(50) NOT NULL,
-     author VARCHAR(30) NOT NULL,
+	isbn CHAR(17) NOT NULL, 
+	title VARCHAR(50) NOT NULL,
+	author VARCHAR(30) NOT NULL,
 CONSTRAINT pri_course PRIMARY KEY(isbn));
+
+CREATE TABLE copy (
+	code int NOT NULL,
+	isbn CHAR(17) NOT NULL,
+	duration TINYINT NOT NULL,
+CONSTRAINT pri_course PRIMARY KEY(code));
+
+CREATE TABLE student (
+	no int NOT NULL,
+	name VARCHAR(30) NOT NULL,
+	school CHAR(3) NOT NULL,
+	embargo BIT NOT NULL,
+CONSTRAINT pri_course PRIMARY KEY(no));
+
+CREATE TABLE loan (
+	code int NOT NULL,
+	no INT NOT NULL,
+	taken DATE NOT NULL,
+	due DATE NOT NULL,
+	`return` DATE NULL,
+CONSTRAINT pri_course PRIMARY KEY(taken));
+
