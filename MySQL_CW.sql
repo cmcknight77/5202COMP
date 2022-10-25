@@ -33,17 +33,17 @@ CREATE TABLE student (
 CONSTRAINT pri_student PRIMARY KEY(`no`));
 
 INSERT INTO book(isbn, title, author) VALUES
-	(111-2-33-444444-5, 'Pro JavaFX', 'Dave Smith'),
-    (222-3-44-555555-6, 'Oracle Systems', 'Kate Roberts'),
-    (333-4-55-666666-7, 'Expert jQuery', 'Mike Smith');
+	('111-2-33-444444-5', 'Pro JavaFX', 'Dave Smith'),
+    ('222-3-44-555555-6', 'Oracle Systems', 'Kate Roberts'),
+    ('333-4-55-666666-7', 'Expert jQuery', 'Mike Smith');
     
 INSERT INTO copy(`code`, isbn, duration) VALUES
-	(1011, 111-2-33-444444-5, 21),
-    (1012, 111-2-33-444444-5, 14),
-    (1013, 111-2-33-444444-5, 7),  
-    (2011, 222-3-44-555555-6, 21), 
-    (3011, 333-4-55-666666-7, 7), 
-    (3012, 333-4-55-666666-7, 14); 
+	(1011, '111-2-33-444444-5', 21),
+    (1012, '111-2-33-444444-5', 14),
+    (1013, '111-2-33-444444-5', 7),  
+    (2011, '222-3-44-555555-6', 21), 
+    (3011, '333-4-55-666666-7', 7), 
+    (3012, '333-4-55-666666-7', 14); 
     
 INSERT INTO loan(`code`, `no`, taken, due, `return`) VALUES
 	(1011, 2002, '2022-01-10', '2022-01-31', '2022-01-31'),
@@ -62,4 +62,4 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
     (2004, 'Karen', 'ENG', 1), 
     (2005, 'Lucy', 'BUE', 0); 
 
-    
+SELECT isbn, title, author FROM book;
