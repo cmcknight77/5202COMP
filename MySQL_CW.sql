@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS book;
-DROP TABLE IF EXISTS copy;
 DROP TABLE IF EXISTS loan;
+DROP TABLE IF EXISTS copy;
 DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS book;
 
 CREATE TABLE book (
 	isbn CHAR(17) NOT NULL, 
@@ -13,9 +13,9 @@ CREATE TABLE copy (
 	`code` int NOT NULL,
 	isbn CHAR(17) NOT NULL,
 	duration TINYINT NOT NULL,
-CONSTRAINT copy_check CHECK (duration IN (`7`, `14`, `21`)),
 CONSTRAINT pri_copy PRIMARY KEY(`code`),
-CONSTRAINT foreign_copy PRIMARY KEY(isbn));
+CONSTRAINT foreign_copy FOREIGN KEY(isbn)
+REFERENCES book(isbn) ON UPDATE CASCADE); 
 
 CREATE TABLE loan (
 	`code` int NOT NULL,
@@ -33,9 +33,9 @@ CREATE TABLE student (
 CONSTRAINT pri_student PRIMARY KEY(`no`));
 
 INSERT INTO book(isbn, title, author) VALUES
-	(111-2-33-444444-5, `Pro JavaFX`, `Dave Smith`),
-    (222-3-44-555555-6, `Oracle Systems`, `Kate Roberts`),
-    (333-4-55-666666-7, `Expert jQuery`, `Mike Smith`);
+	(111-2-33-444444-5, 'Pro JavaFX', 'Dave Smith'),
+    (222-3-44-555555-6, 'Oracle Systems', 'Kate Roberts'),
+    (333-4-55-666666-7, 'Expert jQuery', 'Mike Smith');
     
 INSERT INTO copy(`code`, isbn, duration) VALUES
 	(1011, 111-2-33-444444-5, 21),
@@ -46,20 +46,20 @@ INSERT INTO copy(`code`, isbn, duration) VALUES
     (3012, 333-4-55-666666-7, 14); 
     
 INSERT INTO loan(`code`, `no`, taken, due, `return`) VALUES
-	(1011, 2002, `2022.01.10`, `2022.01.31`, `2022.01.31`),
-    (1011, 2002, `2022.02.05`, `2022.02.26`, `2022.02.23`),
-    (1011, 2003, `2022.05.10`, `2022.05.31`),
-    (1013, 2003, `2021.03.02`, `2021.03.16`, `2021.03.10`),
-    (1013, 2002, `2021.08.02`, `2021.08.16`, `2021.08.16`),
-    (2011, 2004, `2020.02.01`, `2020.02.22`, `2020.02.20`),
-    (3011, 2002, `2022.07.03`, `2022.07.10`),
-    (3011, 2005, `2021.10.10`, `2021.10.17`, `2021.10.20`);
+	(1011, 2002, '2022-01-10', '2022-01-31', '2022-01-31'),
+    (1011, 2002, '2022-02-05', '2022-02-26', '2022-02-23'),
+    (1011, 2003, '2022-05-10', '2022-05-31', NULL),
+    (1013, 2003, '2021-03-02', '2021-03-16', '2021-03-10'),
+    (1013, 2002, '2021-08-02', '2021-08-16', '2021-08-16'),
+    (2011, 2004, '2020-02-01', '2020-02-22', '2020-02-20'),
+    (3011, 2002, '2022-07-03', '2022-07-10', NULL),
+    (3011, 2005, '2021-10-10', '2021-10-17', '2021-10-20');
     
 INSERT INTO student(`no`, `name`, school, embargo) VALUES
-	(2001, Mike, CMP, `No`),
-    (2002, Andy, CMP, `Yes`),
-    (2003, Sarah, ENG, `No`),  
-    (2004, Karen, ENG, `Yes`), 
-    (2005, Lucy, BUE, `No`); 
+	(2001, 'Mike', 'CMP', 0),
+    (2002, 'Andy', 'CMP', 1),
+    (2003, 'Sarah', 'ENG', 0),  
+    (2004, 'Karen', 'ENG', 1), 
+    (2005, 'Lucy', 'BUE', 0); 
 
     
