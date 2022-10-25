@@ -63,3 +63,9 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
     (2005, 'Lucy', 'BUE', 0); 
 
 SELECT isbn, title, author FROM book;
+
+SELECT `no`, `name`, school FROM student
+ORDER BY school DESC;
+
+SELECT isbn, title FROM book
+WHERE author LIKE 'Smith' '%Smith' 'Smith%';
