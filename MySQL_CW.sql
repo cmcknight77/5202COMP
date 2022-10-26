@@ -1,7 +1,11 @@
+-- Dropping all tables
+
 DROP TABLE IF EXISTS loan;
 DROP TABLE IF EXISTS copy;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS book;
+
+-- Creating all tables
 
 CREATE TABLE book (
 	isbn CHAR(17) NOT NULL, 
@@ -31,6 +35,8 @@ CREATE TABLE student (
 	school CHAR(3) NOT NULL,
 	embargo BIT DEFAULT FALSE,
 CONSTRAINT pri_student PRIMARY KEY(`no`));
+
+-- Inserting data to the tables
 
 INSERT INTO book(isbn, title, author) VALUES
 	('111-2-33-444444-5', 'Pro JavaFX', 'Dave Smith'),
@@ -62,10 +68,23 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
     (2004, 'Karen', 'ENG', 1), 
     (2005, 'Lucy', 'BUE', 0); 
 
+
+-- DML 1
 SELECT isbn, title, author FROM book;
 
+-- DML 2
 SELECT `no`, `name`, school FROM student
 ORDER BY school DESC;
 
+-- DML 3
 SELECT isbn, title FROM book
-WHERE author LIKE 'Smith' '%Smith' 'Smith%';
+WHERE author LIKE '%Smith%';
+
+-- DML 4
+SELECT MAX(due) FROM loan;
+
+-- DML 5
+SELECT `no` FROM loan 
+WHERE due IN (SELECT MAX(due) FROM loan);
+
+-- DML 6
