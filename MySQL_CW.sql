@@ -88,3 +88,11 @@ SELECT `no` FROM loan
 WHERE due IN (SELECT MAX(due) FROM loan);
 
 -- DML 6
+SELECT `no`, `name` FROM STUDENT 
+WHERE `no` IN (SELECT `no` FROM loan
+WHERE due IN (SELECT MAX(due) FROM loan))
+
+-- DML 7
+-- SELECT `no`, `code`, due FROM loan
+-- WHERE YEAR(taken) IN YEAR(CURRENT_DATE) AND `return` IS null;
+
