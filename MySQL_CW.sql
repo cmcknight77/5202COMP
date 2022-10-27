@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS copy;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS book;
 
--- Creating all tables
+-- Creating table statements
 
 CREATE TABLE book (
 	isbn CHAR(17) NOT NULL, 
@@ -35,6 +35,8 @@ CREATE TABLE student (
 	school CHAR(3) NOT NULL,
 	embargo BIT DEFAULT FALSE,
 CONSTRAINT pri_student PRIMARY KEY(`no`));
+
+-- Create View Statements
 
 -- Inserting data to the tables
 
@@ -90,9 +92,10 @@ WHERE due IN (SELECT MAX(due) FROM loan);
 -- DML 6
 SELECT `no`, `name` FROM STUDENT 
 WHERE `no` IN (SELECT `no` FROM loan
-WHERE due IN (SELECT MAX(due) FROM loan))
+WHERE due IN (SELECT MAX(due) FROM loan));
 
 -- DML 7
--- SELECT `no`, `code`, due FROM loan
--- WHERE YEAR(taken) IN YEAR(CURRENT_DATE) AND `return` IS null;
+SELECT `no`, `code`, due FROM loan
+WHERE (`return` IS NULL) AND (year(due) = year(CURRENT_DATE()));
 
+-- DML 8
