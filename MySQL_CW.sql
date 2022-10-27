@@ -96,6 +96,17 @@ WHERE due IN (SELECT MAX(due) FROM loan));
 
 -- DML 7
 SELECT `no`, `code`, due FROM loan
-WHERE (`return` IS NULL) AND (year(due) = year(CURRENT_DATE()));
+WHERE year(due) = year(CURRENT_DATE()) AND (`return` IS NULL);
 
 -- DML 8
+SELECT DISTINCT student.`no`, student.`name`, book.isbn, book.title FROM copy INNER JOIN loan
+ON copy.`code` = loan.`code` INNER JOIN student
+ON student.`no` = loan.`no` INNER JOIN book
+ON copy.isbn = book.isbn WHERE copy.duration = 7;
+
+-- DML 9
+SELECT DISTINCT student.`no`, student.`name` FROM student INNER JOIN loan
+ON student.`no` = loan.`no`
+WHERE  loan.due = (SELECT MAX(due) FROM loan);
+
+-- DML 10
