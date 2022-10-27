@@ -110,3 +110,8 @@ ON student.`no` = loan.`no`
 WHERE  loan.due = (SELECT MAX(due) FROM loan);
 
 -- DML 10
+SELECT book.title, COUNT(book.title) AS 'Loan Frequency' FROM book INNER JOIN copy
+ON book.isbn = copy.isbn INNER JOIN loan
+ON copy.`code`  = loan.`code` GROUP BY book.title;
+
+-- DML 11
