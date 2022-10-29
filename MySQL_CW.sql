@@ -1,4 +1,4 @@
--- Dropping all tables
+-- Dropping tables
 
 DROP TABLE IF EXISTS loan;
 DROP TABLE IF EXISTS copy;
@@ -36,8 +36,6 @@ CREATE TABLE student (
 	embargo BIT DEFAULT FALSE,
 CONSTRAINT pri_student PRIMARY KEY(`no`));
 
--- Create View Statements
-
 -- Inserting data to the tables
 
 INSERT INTO book(isbn, title, author) VALUES
@@ -70,6 +68,14 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
     (2004, 'Karen', 'ENG', 1), 
     (2005, 'Lucy', 'BUE', 0); 
 
+
+-- Create View Statements
+
+CREATE VIEW CMP_only AS
+SELECT `no`, `name`, school, embargo FROM student 
+WHERE school = 'CMP' WITH CHECK OPTION;
+INSERT INTO CMP_only(`no`, `name`, school, embargo) VALUES
+    (2005, 'Lucy', 'BUE', 0);
 
 -- DML 1
 SELECT isbn, title, author FROM book;
@@ -115,3 +121,7 @@ ON book.isbn = copy.isbn INNER JOIN loan
 ON copy.`code`  = loan.`code` GROUP BY book.title;
 
 -- DML 11
+SELECT book.title, COUNT(book.title) AS 'Loan Frequency' FROM book INNER JOIN copy
+ON book.isbn = copy.isbn
+INNER JOIN loan ON copy.code = loan.code
+GROUP BY book.title HAVING COUNT(book.title) >= 2;
