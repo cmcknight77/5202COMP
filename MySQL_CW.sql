@@ -1,9 +1,11 @@
--- Dropping tables
+-- Dropping
 
 DROP TABLE IF EXISTS loan;
 DROP TABLE IF EXISTS copy;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS book;
+
+DROP VIEW IF EXISTS CMP_students;
 
 -- Creating table statements
 
@@ -71,11 +73,22 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
 
 -- Create View Statements
 
-CREATE VIEW CMP_only AS
-SELECT `no`, `name`, school, embargo FROM student 
-WHERE school = 'CMP' WITH CHECK OPTION;
-INSERT INTO CMP_only(`no`, `name`, school, embargo) VALUES
-    (2005, 'Lucy', 'BUE', 0);
+-- CREATE VIEW CMP_students AS
+-- SELECT `no`, `name`, school, embargo FROM student 
+-- WHERE school = 'CMP' WITH CHECK OPTION;
+-- INSERT INTO CMP_Students(`no`, `name`, school, embargo) VALUES
+--    (2005, 'Lucy', 'BUE', 0);
+    
+-- Create Procedure Statements
+
+
+
+
+
+
+
+
+
 
 -- DML 1
 SELECT isbn, title, author FROM book;
