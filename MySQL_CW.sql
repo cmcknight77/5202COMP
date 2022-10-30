@@ -7,6 +7,11 @@ DROP TABLE IF EXISTS book;
 
 DROP VIEW IF EXISTS CMP_students;
 
+DROP PROCEDURE IF EXISTS new_loan;
+
+DROP TABLE IF EXISTS audit_trail;
+DROP TRIGGER IF EXISTS new_loan;
+
 -- Creating table statements
 
 CREATE TABLE book (
@@ -79,6 +84,7 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
 -- INSERT INTO CMP_Students(`no`, `name`, school, embargo) VALUES
 --    (2005, 'Lucy', 'BUE', 0);
     
+    
 -- Create Procedure Statements
 
 DELIMITER $$
@@ -132,18 +138,39 @@ END LOOP;
 CLOSE copy_cursor;	
 
 IF(issued = FALSE) THEN SIGNAL SQLSTATE '45000'
-SET MESSAGE_TEXT = 'No available copies or book does not exist!';
+SET MESSAGE_TEXT = 'Book not found';
 END IF;
 
 END$$	
 DELIMITER ;
 
 
+-- Create Trigger Statements
+
+CREATE TABLE audit_trail (
+`code` int NOT NULL,
+`no` INT NOT NULL,
+taken DATE NOT NULL,
+due DATE NOT NULL,
+`return` DATE NULL);
+
+DELIMITER $$
+
+CREATE TRIGGER new_loan AFTER
+UPDATE ON loan FOR EACH ROW
+BEGIN 
+
+IF(OLD.`return` IS NULL) AND (CURRENT_DATE() > OLD.due) THEN 
+INSERT INTO audit_trail (`code`, `no`, taken, due, `return`) 
+VALUES (NEW.`code`, NEW.`no`, NEW.taken, NEW.due, NEW.`return`); 
+
+END IF;
+
+END$$
+DELIMITER ;
 
 
-
-
-
+-- DML Statements
 -- DML 1
 SELECT isbn, title, author FROM book;
 
