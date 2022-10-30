@@ -87,7 +87,7 @@ CREATE PROCEDURE new_loan(IN book_isbn CHAR(17), IN student_no INT)
 BEGIN
 
 DECLARE book_copy, loan_test INT;
-DECLARE entered, test_complete BOOLEAN;
+DECLARE issued, test_complete BOOLEAN;
 DECLARE due_date DATE;
 DECLARE copy_duration TINYINT;
 DECLARE student_embargo BIT(1) DEFAULT b'1';
@@ -95,22 +95,48 @@ DECLARE student_embargo BIT(1) DEFAULT b'1';
 DECLARE  copy_cursor CURSOR FOR SELECT `code`
 FROM copy WHERE isbn = book_isbn;
 DECLARE CONTINUE HANDLER FOR NOT FOUND	
-SET complete = TRUE;
+SET test_complete = TRUE;
 OPEN copy_cursor;
 
-SET embargo_status = (SELECT embargo 
-FROM student WHERE `no` = student_no);
-SELECT embargo_status;
+SET student_embargo = 
+(SELECT embargo FROM student WHERE `no` = student_no);
+SELECT student_embargo;
 		
 IF (embargo_status = b'1') THEN SIGNAL SQLSTATE '45000'
 SET MESSAGE_TEXT = 'Student unable to loan';	
 END IF;	
-
 SET issued = FALSE;
-SET copy_codes = 0;
+SET book_copy = 0;
 
+ypoolloopy : LOOP
 
+FETCH NEXT FROM copy_cursor INTO book_copy;
+IF(test_complete)THEN LEAVE ypoolloopy;
+END IF;
 
+SET loan_test =
+(SELECT `code` FROM loan WHERE (`code` = book_copy) AND (`return` IS NULL));
+IF(loan_test IS NULL) THEN 
+SET copy_duration = 
+(SELECT duration FROM copy WHERE `code` = book_copy);
+SET due_date = DATE_ADD(CURRENT_DATE, INTERVAL copy_duration DAY);
+                
+INSERT INTO loan (`code`, `no`, taken, due,`return`)
+VALUES (book_copy, student_no, CURRENT_DATE, due_date, null);
+SET issued = TRUE;
+
+LEAVE ypoolloopy;
+END IF;
+END LOOP;
+	
+CLOSE copy_cursor;	
+
+IF(issued = FALSE) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'No available copies or book does not exist!';
+END IF;
+
+END$$	
+DELIMITER ;
 
 
 
