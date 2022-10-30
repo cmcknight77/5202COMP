@@ -81,6 +81,34 @@ INSERT INTO student(`no`, `name`, school, embargo) VALUES
     
 -- Create Procedure Statements
 
+DELIMITER $$
+
+CREATE PROCEDURE new_loan(IN book_isbn CHAR(17), IN student_no INT)
+BEGIN
+
+DECLARE book_copy, loan_test INT;
+DECLARE entered, test_complete BOOLEAN;
+DECLARE due_date DATE;
+DECLARE copy_duration TINYINT;
+DECLARE student_embargo BIT(1) DEFAULT b'1';
+
+DECLARE  copy_cursor CURSOR FOR SELECT `code`
+FROM copy WHERE isbn = book_isbn;
+DECLARE CONTINUE HANDLER FOR NOT FOUND	
+SET complete = TRUE;
+OPEN copy_cursor;
+
+SET embargo_status = (SELECT embargo 
+FROM student WHERE `no` = student_no);
+SELECT embargo_status;
+		
+IF (embargo_status = b'1') THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Student unable to loan';	
+END IF;	
+
+SET issued = FALSE;
+SET copy_codes = 0;
+
 
 
 
