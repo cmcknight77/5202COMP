@@ -10,7 +10,7 @@ public class JavaApp1 {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            c = DriverManager.getConnection(); // ToDo : Specify Parameters !
+            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/books?serverTimezone=GMT", "root", "pass1");
 
             String choice = "";
 
@@ -47,14 +47,48 @@ public class JavaApp1 {
     private static void browseResultSet() throws Exception {
         Statement s = c.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-        ResultSet rs = s.executeQuery(); // ToDo : Specify Query !
+        ResultSet result = s.executeQuery("SELECT loan.no, due\r\n from loan\r\n WHERE ( `return` = null) and (year(due) = YEAR(CURRENT_DATE()))");
 
-        // ToDo : Check ResultSet Contains Rows !
-            // ToDo : Display ResultSet Rows !
+        ResultSetMetaData resultSet = result.getMetaData();
+        
+        int columb = resultSet.getColumnCount();
+        
+        
+        while(result.next()) 
+        { for (int i = 1; i<= columb; i++)
+        	{
+        	if (i > 1) System.out.print(", ");
+        	String columbNumber = result.getString(i);
+        	System.out.print(resultSet.getColumnName(i) + columbNumber);
+        	}
+        	
+        }
+        
     }
 
     private static void invokeProcedure() throws Exception {
-        // ToDo : Receive Course Code & Course Date !
-        // ToDo : Specify CallableStatement !
+    	
+    	try {
+    	
+    	String isbn = "";
+    	String studentNo = "";
+    	String Procedure = "{Call new_loan(?,?)}";
+    	
+    	CallableStatement statement = c.prepareCall(Procedure);
+    	
+    	System.out.print("Enter isbn");
+    	isbn = S.next();
+    	System.out.print("Enter student number");
+    	studentNo = S.next();
+    	
+    	statement.setString(1, isbn);
+    	statement.setString(2, studentNo);
+    	statement.execute();
+    	}
+    	catch (Exception e) { 		
+    		System.out.print("Input invalid");   		
+    	}
+
+    	
     }
 }
